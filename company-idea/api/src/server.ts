@@ -1,3 +1,6 @@
 import App from "./app";
 
-new App();
+import userController from "./controllers/skins.controller";
+
+new App(new userController());
+

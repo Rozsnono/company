@@ -1,91 +1,125 @@
-import Image from 'next/image'
-import LogoTitle from '../assets/logo-title-dark.png';
-import "./navbar.css"
-import React from 'react';
+import Image from 'next/image';
+import React, { useContext, useEffect } from 'react';
 
-export default function Nav() {
+import Logo from "../assets/logo-title-light.svg"
+import { Menu } from 'primereact/menu';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+
+export default function Navbar() {
+
 
     const [navbarOpen, setNavbarOpen] = React.useState(false);
+    const profileRef = React.useRef<Menu>(null);
 
+    const url = usePathname();
+    const r = useRouter();
+
+    function getUrl(urls: string) {
+        if (url == urls) {
+            return "bg-gray-900 w-full text-white rounded-md px-3 py-2 text-lg font-medium "
+        }
+        return "text-gray-300 lg:text-gray-950 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-lg font-medium"
+    }
+
+    const items = [
+        {
+            label: "user",
+            items: [
+                {
+                    label: 'Profile',
+                    command: () => {
+                        
+                    }
+                },
+                {
+                    label: 'Log out',
+                    command: () => {
+                        
+                    }
+                }
+            ]
+        }
+    ];
     return (
-        <nav className="nav">
-            <div className="container mx-auto px-4">
-                <div className="flex items-center justify-center h-16">
-                    <div className="flex items-center">
-                        <a className="text-white text-xl font-semibold" href="#">
-                            <Image
-                                src={LogoTitle}
-                                alt="PasTeal Logo"
-                                className="dark"
-                                height={50}
-                                priority
-                            /></a>
-                    </div>
-                    <div className="flex md:hidden justify-end flex-1">
-                        <button
-                            className={`navbar-button ${navbarOpen ? 'open' : 'closed'}` + ' text-gray-300 hover:text-white focus:outline-none focus:text-white'}
-                            onClick={() => setNavbarOpen(!navbarOpen)}
-                        >
-                            <svg
-                                className="navbar-icon"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    className="line line1"
-                                    d="M2 7h20"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                />
-                                <path
-                                    className="line line2"
-                                    d="M2 12h20"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                />
-                                <path
-                                    className="line line3"
-                                    d="M2 17h20"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                />
+        <nav className={"fixed w-screen top-0 " + (navbarOpen ? "bg-[#c2410cf0] min-h-screen lg:min-h-full " : "bg-transparent")}>
+            <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                <div className="relative flex h-16 items-center justify-between">
+                    <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                        <button onClick={() => { setNavbarOpen(!navbarOpen) }} type="button" className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                            <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                            <svg className="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
-                    <div className="hidden md:flex md:items-center justify-center flex-1">
-                        <div className="ml-4 nav-items">
-                            <a className="text-gray-300 hover:text-white px-3 py-2 rounded-md" href="#"><i className='pi pi-home' /> Home</a>
-                            {/* <a className="text-gray-300 hover:text-white px-3 py-2 rounded-md" href="#"><i className='pi pi-user' /> About</a> */}
-                            <a className="text-gray-300 hover:text-white px-3 py-2 rounded-md" href="#"><i className='pi pi-cog' /> Services</a>
-                            <a className="text-gray-300 hover:text-white px-3 py-2 rounded-md" href="#"><i className='pi pi-phone' /> Contact</a>
+                    <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                        <div className="flex flex-shrink-0 items-center">
+                            <Image width={300} height={300} className="h-12 w-auto" src={Logo} alt="Your Company" />
                         </div>
+                        {/* <div className="hidden sm:ml-6 sm:block">
+                            <div className="flex space-x-4 items-center mt-2">
+                                <Link href="/" >
+                                    <span className={getUrl("/")} aria-current="page"> Home</span>
+                                </Link>
+                                <Link href="/questions">
+                                    <span className={getUrl("/questions")}> Questions</span>
+                                </Link>
+
+                            </div>
+                        </div> */}
+                    </div>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                        {/* <button type="button" className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                            <span className="sr-only">View notifications</span>
+                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                            </svg>
+                        </button> */}
+
+                        {/* {
+                            user != null && user != undefined ?
+                                <div className="relative ml-3">
+                                    <div className={'flex items-center gap-3 rounded-full p-1' + (user ? " bg-transparent-gray" : "")}>
+                                        <button onClick={(e) => { profileRef.current!.toggle(e) }} type="button" className="flex rounded-full bg-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                            <Image width={100} height={100} className="h-8 w-8 rounded-full" src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" alt="" />
+                                        </button>
+                                        <div className="hidden lg:block nav-items text-lg text-white pe-4">
+                                            {user.nickname}
+                                        </div>
+                                    </div>
+                                    <Menu model={items} popup ref={profileRef} id="popup_menu_left" className='mt-2' />
+                                </div>
+                                :
+                                <div className="relative ml-3 flex">
+                                    <div className={'flex items-center gap-3 rounded-full p-1' + (user ? " bg-transparent-gray" : "")}>
+                                        <Link href={"/login"}>
+
+                                            <div className="text-sm text-blue-500 px-4 py-1 border-2 border-blue-500 rounded-full font-bold hover:text-white hover:bg-blue-500 cursor-pointer">
+                                                <i className={Icons.SIGNIN} style={{ fontSize: ".75rem" }}></i> Login
+                                            </div>
+                                        </Link>
+                                    </div>
+                                </div>
+                        } */}
+
                     </div>
                 </div>
             </div>
+
             {
                 navbarOpen ?
-                    <div className="flex md:hidden">
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                            <a className="text-gray-300 hover:text-white block px-3 py-2 rounded-md" href="#"><i className='pi pi-home' /> Home</a>
-                            {/* <a className="text-gray-300 hover:text-white block px-3 py-2 rounded-md" href="#"><i className='pi pi-user' /> About</a> */}
-                            <a className="text-gray-300 hover:text-white block px-3 py-2 rounded-md" href="#"><i className='pi pi-cog' /> Services</a>
-                            <a className="text-gray-300 hover:text-white block px-3 py-2 rounded-md" href="#"><i className='pi pi-phone' /> Contact</a>
-                        </div>
-                    </div>
-                    : null
+                    <div className="sm:hidden grid text-center mx-4 gap-4 mt-16">
+                        <Link href="/" onClick={() => { setNavbarOpen(false) }} className={getUrl("/")}>
+                            <span> Home</span>
+                        </Link>
+                        <Link href="/questions" onClick={() => { setNavbarOpen(false) }} className={getUrl("/questions")}>
+                            <span> Questions</span>
+                        </Link>
+                    </div> : <></>
             }
-            <div className="wave-divider">
-                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" className="shape-fill"></path>
-                    <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" className="shape-fill"></path>
-                    <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" className="shape-fill"></path>
-                </svg>
-            </div>
-
-
         </nav>
-    );
+    )
 }
